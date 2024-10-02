@@ -1,19 +1,31 @@
 package com.maxwellhgr.steams.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "tb_lobbies")
 public class Lobby implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer gameCode;
 
+    @ManyToMany
+    @JoinTable(
+            name = "tb_lobby_user",
+            joinColumns = @JoinColumn(name = "lobby_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private final Set<User> users = new HashSet<User>();
 
     public Lobby() {}
