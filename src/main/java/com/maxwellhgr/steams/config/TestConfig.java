@@ -29,8 +29,8 @@ public class TestConfig implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3));
 
-        Lobby l1 = new Lobby(null, 255);
-        Lobby l2 = new Lobby(null, 366);
+        Lobby l1 = new Lobby(null, 255, u1);
+        Lobby l2 = new Lobby(null, 366, u3);
 
         lobbyRepository.saveAll(Arrays.asList(l1, l2));
 

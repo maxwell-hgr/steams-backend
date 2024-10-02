@@ -19,6 +19,7 @@ public class Lobby implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer gameCode;
+    private Long ownerId;
 
     @ManyToMany
     @JoinTable(
@@ -30,9 +31,10 @@ public class Lobby implements Serializable {
 
     public Lobby() {}
 
-    public Lobby(Long id, Integer gameCode) {
+    public Lobby(Long id, Integer gameCode, User owner) {
         this.id = id;
         this.gameCode = gameCode;
+        this.ownerId = owner.getId();
     }
 
     public Long getId() {
