@@ -34,6 +34,7 @@ public class Lobby implements Serializable {
 
     public Lobby(Long id, String name, Integer gameCode, User owner) {
         this.id = id;
+        this.name = name;
         this.gameCode = gameCode;
         this.ownerId = owner.getId();
     }
@@ -46,12 +47,28 @@ public class Lobby implements Serializable {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Integer getGameCode() {
         return gameCode;
     }
 
     public void setGameCode(Integer gameCode) {
         this.gameCode = gameCode;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public Set<User> getUsers() {

@@ -13,8 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/users")
 public class UserResource {
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserResource(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ResponseEntity<List<User>> findAll(){

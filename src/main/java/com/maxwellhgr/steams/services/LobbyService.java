@@ -9,8 +9,13 @@ import java.util.List;
 
 @Service
 public class LobbyService {
-    @Autowired
+
     LobbyRepository lobbyRepository;
+
+    @Autowired
+    public LobbyService(LobbyRepository lobbyRepository) {
+        this.lobbyRepository = lobbyRepository;
+    }
 
     public List<Lobby> findAll(){
         return lobbyRepository.findAll();

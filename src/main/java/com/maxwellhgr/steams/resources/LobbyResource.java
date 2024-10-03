@@ -13,8 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/lobbies")
 public class LobbyResource {
+
+    private final LobbyService lobbyService;
+
     @Autowired
-    private LobbyService lobbyService;
+    public LobbyResource(LobbyService lobbyService) {
+        this.lobbyService = lobbyService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Lobby>> findAll(){

@@ -15,11 +15,15 @@ import java.util.Arrays;
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final LobbyRepository lobbyRepository;
 
     @Autowired
-    private LobbyRepository lobbyRepository;
+    public TestConfig(UserRepository userRepository, LobbyRepository lobbyRepository) {
+        this.userRepository = userRepository;
+        this.lobbyRepository = lobbyRepository;
+    }
 
     @Override
     public void run(String... args) throws Exception{
