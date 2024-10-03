@@ -18,6 +18,7 @@ public class Lobby implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
     private Integer gameCode;
     private Long ownerId;
 
@@ -31,7 +32,7 @@ public class Lobby implements Serializable {
 
     public Lobby() {}
 
-    public Lobby(Long id, Integer gameCode, User owner) {
+    public Lobby(Long id, String name, Integer gameCode, User owner) {
         this.id = id;
         this.gameCode = gameCode;
         this.ownerId = owner.getId();
