@@ -36,10 +36,10 @@ public class TestConfig implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5, u6));
 
-        Lobby l1 = new Lobby(null, "fun lobby",255, u1);
-        Lobby l2 = new Lobby(null, "hate lobby",366, u3);
-        Lobby l3 = new Lobby(null, "friends lobby",26588, u3);
-        Lobby l4 = new Lobby(null, "red dead lobby",26588, u5);
+        Lobby l1 = new Lobby(null, "fun lobby",255, u1.getId());
+        Lobby l2 = new Lobby(null, "hate lobby",366, u3.getId());
+        Lobby l3 = new Lobby(null, "friends lobby",26588, u3.getId());
+        Lobby l4 = new Lobby(null, "red dead lobby",26588, u5.getId());
 
         lobbyRepository.saveAll(Arrays.asList(l1, l2, l3, l4));
 
