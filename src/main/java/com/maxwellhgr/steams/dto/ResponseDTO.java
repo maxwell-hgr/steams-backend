@@ -1,4 +1,4 @@
 package com.maxwellhgr.steams.dto;
 
-public record ResponseDTO (String name, String token){
+public record ResponseDTO (String email, String token){
 }
