@@ -1,4 +1,4 @@
 package com.maxwellhgr.steams.dto;
 
-public record RegisterRequestDTO (String name, String email, String password){
+public record RegisterRequestDTO (String email, String password, String steamUrl){
 }
