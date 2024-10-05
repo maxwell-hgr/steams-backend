@@ -35,7 +35,8 @@ public class UserService {
 
     public User update(UserUpdateDTO data, User user) {
         try {
-            updateData(user, data);
+            user.setEmail(data.email());
+            user.setPassword(data.password());
             userRepository.save(user);
             return user;
         } catch (EntityNotFoundException e) {
@@ -51,10 +52,5 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
-    }
-
-    private void updateData(User entity, UserUpdateDTO obj) {
-        entity.setEmail(obj.email());
-        entity.setPassword(obj.password());
     }
 }
