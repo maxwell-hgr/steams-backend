@@ -1,4 +1,4 @@
 package com.maxwellhgr.steams.dto;
 
-public record UserUpdateDTO(String email, String password) {
+public record UserUpdateDTO(String email, String username, String photoUrl) {
 }

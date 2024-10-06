@@ -35,7 +35,8 @@ public class LobbyService {
         return lobby.orElseThrow(() -> new RuntimeException("Lobby not find"));
     }
 
-    public Lobby create(Lobby lobby){
+    public Lobby create(Lobby lobby, User user){
+        lobby.setOwnerId(user.getId());
         return lobbyRepository.save(lobby);
     }
 

@@ -44,4 +44,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(authHeader == null) return null;
         return authHeader.replace("Bearer ", "");
     }
+
+    public String recoverEmailFromToken(HttpServletRequest request) {
+        var token = recoverToken(request);
+        if(token == null) return null;
+        return tokenService.validateToken(token);
+    }
 }

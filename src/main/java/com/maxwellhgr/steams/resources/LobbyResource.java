@@ -2,8 +2,12 @@ package com.maxwellhgr.steams.resources;
 
 import com.maxwellhgr.steams.dto.LobbyUpdateDTO;
 import com.maxwellhgr.steams.entities.Lobby;
+import com.maxwellhgr.steams.entities.User;
 import com.maxwellhgr.steams.services.LobbyService;
+import com.maxwellhgr.steams.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +18,12 @@ import java.util.List;
 public class LobbyResource {
 
     private final LobbyService lobbyService;
+    private final UserService userService;
 
     @Autowired
-    public LobbyResource(LobbyService lobbyService) {
+    public LobbyResource(LobbyService lobbyService, UserService userService) {
         this.lobbyService = lobbyService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -33,22 +39,31 @@ public class LobbyResource {
     }
 
     @PostMapping
-    public ResponseEntity<Lobby> create(@RequestBody Lobby lobby){
-        Lobby result = lobbyService.create(lobby);
+    public ResponseEntity<Lobby> create(@RequestBody Lobby lobby, HttpServletRequest request){
+        User user = userService.getUserFromRequest(request);
+        Lobby result = lobbyService.create(lobby, user);
         return ResponseEntity.ok().body(result);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Lobby> update(@PathVariable long id, @RequestBody LobbyUpdateDTO data){
+    public ResponseEntity<Lobby> update(@PathVariable long id, @RequestBody LobbyUpdateDTO data, HttpServletRequest request){
+        User user = userService.getUserFromRequest(request);
         Lobby lobby = lobbyService.findById(id);
-        Lobby updatedLobby = lobbyService.update(data, lobby);
-        return ResponseEntity.ok().body(updatedLobby);
+        if(lobby.getOwnerId().equals(user.getId())){
+            Lobby updatedLobby = lobbyService.update(data, lobby);
+            return ResponseEntity.ok().body(updatedLobby);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Lobby> delete(@PathVariable long id){
+    public ResponseEntity<Lobby> delete(@PathVariable long id, HttpServletRequest request){
+        User user = userService.getUserFromRequest(request);
         Lobby lobby = lobbyService.findById(id);
-        lobbyService.delete(id);
-        return ResponseEntity.ok().body(lobby);
+        if(lobby.getOwnerId().equals(user.getId())){
+            lobbyService.delete(id);
+            return ResponseEntity.ok().body(lobby);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

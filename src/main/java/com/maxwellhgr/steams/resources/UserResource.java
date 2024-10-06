@@ -2,6 +2,7 @@ package com.maxwellhgr.steams.resources;
 
 import com.maxwellhgr.steams.dto.UserUpdateDTO;
 import com.maxwellhgr.steams.entities.User;
+import com.maxwellhgr.steams.infra.security.SecurityFilter;
 import com.maxwellhgr.steams.services.UserService;
 import com.maxwellhgr.steams.services.exceptions.DatabaseException;
 import com.maxwellhgr.steams.services.exceptions.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -39,16 +41,21 @@ public class UserResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserUpdateDTO data){
-        User user = userService.findById(id);
-        User updatedUser = userService.update(data, user);
-        return ResponseEntity.ok().body(updatedUser);
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserUpdateDTO data, HttpServletRequest request){
+        User user = userService.getUserFromRequest(request);
+        if(user.getId().equals(id)){
+            User updatedUser = userService.update(data, user);
+            return ResponseEntity.ok().body(updatedUser);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> delete(@PathVariable Long id){
-        userService.delete(id);
+    public ResponseEntity<User> delete(@PathVariable Long id, HttpServletRequest request) {
+        User user = userService.getUserFromRequest(request);
+        if(user.getId().equals(id)){
+            userService.delete(id);
+        }
         return ResponseEntity.noContent().build();
     }
-
 }
