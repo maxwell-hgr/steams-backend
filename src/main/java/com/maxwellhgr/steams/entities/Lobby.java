@@ -36,7 +36,11 @@ public class Lobby implements Serializable {
             joinColumns = @JoinColumn(name = "lobby_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private final Set<User> users = new HashSet<User>();
+    private final Set<User> users = new HashSet<>();
+
+    public void addUser(User user) {
+        users.add(user);
+    }
 
     @Override
     public boolean equals(Object o) {

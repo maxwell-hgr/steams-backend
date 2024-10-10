@@ -7,11 +7,11 @@ import com.maxwellhgr.steams.services.LobbyService;
 import com.maxwellhgr.steams.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/lobbies")
@@ -29,6 +29,20 @@ public class LobbyResource {
     @GetMapping
     public ResponseEntity<List<Lobby>> findAll(){
         List<Lobby> lobbies = lobbyService.findAll();
+        return ResponseEntity.ok().body(lobbies);
+    }
+
+    @GetMapping(value = "/user/{id}")
+    public ResponseEntity<Set<Lobby>> findAllByUserId(@PathVariable long id){
+        User user = userService.findById(id);
+        Set<Lobby> lobbies = user.getLobbies();
+        return ResponseEntity.ok().body(lobbies);
+    }
+
+    @GetMapping(value = "/user")
+    public ResponseEntity<Set<Lobby>> findAllByUser(HttpServletRequest request){
+        User user = userService.getUserFromRequest(request);
+        Set<Lobby> lobbies = user.getLobbies();
         return ResponseEntity.ok().body(lobbies);
     }
 
