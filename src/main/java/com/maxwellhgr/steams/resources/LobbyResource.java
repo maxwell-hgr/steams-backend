@@ -32,16 +32,16 @@ public class LobbyResource {
         return ResponseEntity.ok().body(lobbies);
     }
 
-    @GetMapping(value = "/user/{id}")
-    public ResponseEntity<Set<Lobby>> findAllByUserId(@PathVariable long id){
-        User user = userService.findById(id);
+    @GetMapping(value = "/user")
+    public ResponseEntity<Set<Lobby>> findAllByUser(HttpServletRequest request){
+        User user = userService.getUserFromRequest(request);
         Set<Lobby> lobbies = user.getLobbies();
         return ResponseEntity.ok().body(lobbies);
     }
 
-    @GetMapping(value = "/user")
-    public ResponseEntity<Set<Lobby>> findAllByUser(HttpServletRequest request){
-        User user = userService.getUserFromRequest(request);
+    @GetMapping(value = "/user/{id}")
+    public ResponseEntity<Set<Lobby>> findAllByUserId(@PathVariable long id){
+        User user = userService.findById(id);
         Set<Lobby> lobbies = user.getLobbies();
         return ResponseEntity.ok().body(lobbies);
     }
