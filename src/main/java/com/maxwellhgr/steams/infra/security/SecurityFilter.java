@@ -39,6 +39,13 @@ public class SecurityFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(request, response);
+
+        var authContext = SecurityContextHolder.getContext().getAuthentication();
+        if (authContext != null) {
+            System.out.println("User authenticated: " + authContext.getName());
+        } else {
+            System.out.println("Authentication context is null after filterChain");
+        }
     }
 
     private String recoverToken(HttpServletRequest request) {
