@@ -37,7 +37,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(Long id) {
+    public User findById(String id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -54,7 +54,7 @@ public class UserService {
         }
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         try {
             userRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

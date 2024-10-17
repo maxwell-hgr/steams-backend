@@ -40,7 +40,7 @@ public class LobbyResource {
     }
 
     @GetMapping(value = "/user/{id}")
-    public ResponseEntity<Set<Lobby>> findAllByUserId(@PathVariable long id){
+    public ResponseEntity<Set<Lobby>> findAllByUserId(@PathVariable String id){
         User user = userService.findById(id);
         Set<Lobby> lobbies = user.getLobbies();
         return ResponseEntity.ok().body(lobbies);

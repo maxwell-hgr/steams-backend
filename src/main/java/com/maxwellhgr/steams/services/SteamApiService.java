@@ -46,7 +46,7 @@ public class SteamApiService {
             JsonNode playerNode = rootNode.path("response").path("players").get(0);
 
             User user = new User();
-            user.setId(playerNode.path("steamid").asLong());
+            user.setId(playerNode.path("steamid").asText());
             user.setUsername(playerNode.path("personaname").asText());
             user.setPhotoUrl(playerNode.path("avatarfull").asText());
 
@@ -111,7 +111,7 @@ public class SteamApiService {
                 Game game = new Game();
                 game.setAppId(gameNode.path("appid").asInt());
                 game.setName(gameNode.path("name").asText());
-                game.setBanner("https://cdn.cloudflare.steamstatic.com/steam/apps/" + game.getAppId() + "header.jpg");
+                game.setBanner("https://cdn.cloudflare.steamstatic.com/steam/apps/" + game.getAppId() + "/header.jpg");
                 gamesList.add(game);
             }
         } catch (IOException e) {

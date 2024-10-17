@@ -28,7 +28,7 @@ public class UserResource {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
+    public ResponseEntity<User> findById(@PathVariable String id){
         User user = userService.findById(id);
         return ResponseEntity.ok().body(user);
     }
@@ -40,7 +40,7 @@ public class UserResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserUpdateDTO data, HttpServletRequest request){
+    public ResponseEntity<User> update(@PathVariable String id, @RequestBody UserUpdateDTO data, HttpServletRequest request){
         User user = userService.getUserFromRequest(request);
         if(user.getId().equals(id)){
             User updatedUser = userService.update(data, user);
@@ -50,7 +50,7 @@ public class UserResource {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> delete(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<User> delete(@PathVariable String id, HttpServletRequest request) {
         User user = userService.getUserFromRequest(request);
         if(user.getId().equals(id)){
             userService.delete(id);

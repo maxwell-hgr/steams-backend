@@ -27,12 +27,12 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-        User u1 = new User(1L, "Dole", "dole@james", "123456", "");
-        User u2 = new User(2L, "James", "james@james", "123456", "");
-        User u3 = new User(3L, "Silva", "dole@james", "123456", "");
-        User u4 = new User(4L, "Jack", "jack@james", "123456", "");
-        User u5 = new User(5L, "John", "john@james", "123456", "");
-        User u6 = new User(6L, "Jack", "jack@james", "123456", "");
+        User u1 = new User("23123123", "Dole", "dole@james", "123456", "");
+        User u2 = new User("21312312", "James", "james@james", "123456", "");
+        User u3 = new User("213123123", "Silva", "dole@james", "123456", "");
+        User u4 = new User("22132213", "Jack", "jack@james", "123456", "");
+        User u5 = new User("4165416541", "John", "john@james", "123456", "");
+        User u6 = new User("41351351", "Jack", "jack@james", "123456", "");
 
         userRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5, u6));
 

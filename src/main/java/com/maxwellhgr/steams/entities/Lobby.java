@@ -28,7 +28,7 @@ public class Lobby implements Serializable {
     private Long id;
     private String name;
     private Integer gameCode;
-    private Long ownerId;
+    private String ownerId;
 
     @ManyToMany
     @JoinTable(
