@@ -2,20 +2,13 @@ package com.maxwellhgr.steams.resources;
 
 import com.maxwellhgr.steams.dto.UserUpdateDTO;
 import com.maxwellhgr.steams.entities.User;
-import com.maxwellhgr.steams.infra.security.SecurityFilter;
 import com.maxwellhgr.steams.services.UserService;
-import com.maxwellhgr.steams.services.exceptions.DatabaseException;
-import com.maxwellhgr.steams.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -26,6 +19,12 @@ public class UserResource {
     @Autowired
     public UserResource(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping(value = "/profile")
+    public ResponseEntity<User> getProfile(HttpServletRequest request) {
+        User user = userService.getUserFromRequest(request);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping(value = "/{id}")
