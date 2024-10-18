@@ -1,6 +1,4 @@
 package com.maxwellhgr.steams.dto;
 
-import com.maxwellhgr.steams.entities.User;
-
-public record LobbyUpdateDTO(String name, Integer gameCode, Long addUserId) {
+public record LobbyUpdateDTO(String name, Integer gameCode, String addUserId) {
 }

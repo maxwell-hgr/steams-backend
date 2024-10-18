@@ -1,6 +1,7 @@
 package com.maxwellhgr.steams.resources;
 
 import com.maxwellhgr.steams.entities.Game;
+import com.maxwellhgr.steams.services.GameService;
 import com.maxwellhgr.steams.services.SteamApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,22 @@ import java.util.List;
 public class SteamResource {
 
     private final SteamApiService steamApiService;
+    private final GameService gameService;
 
     @Autowired
-    public SteamResource(SteamApiService steamApiService) {
+    public SteamResource(SteamApiService steamApiService, GameService gameService) {
         this.steamApiService = steamApiService;
+        this.gameService = gameService;
+    }
+
+    @GetMapping(value = "/games")
+    public ResponseEntity<List<Game>> getGames() {
+        List<Game> games = gameService.findAll();
+        return ResponseEntity.ok(games);
     }
 
     @GetMapping(value = "/games/{id}")
-    public ResponseEntity<List<Game>> getGamesById(@PathVariable Long id){
+    public ResponseEntity<List<Game>> getGamesById(@PathVariable String id){
         List<Game> games = steamApiService.getOwnedGames(id);
         return ResponseEntity.ok().body(games);
     }

@@ -17,8 +17,8 @@ import java.util.Set;
 @Table(name = "tb_users")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
 
     @Serial
@@ -36,6 +36,17 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "users")
     private final Set<Lobby> lobbies = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_game",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private Set<Game> games = new HashSet<>();
+
+    public void addGame(Game game) {
+        games.add(game);
+    }
 
     @Override
     public boolean equals(Object o) {

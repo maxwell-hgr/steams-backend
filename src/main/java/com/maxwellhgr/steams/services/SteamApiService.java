@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maxwellhgr.steams.entities.Game;
 import com.maxwellhgr.steams.entities.User;
+import com.maxwellhgr.steams.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SteamApiService {
@@ -18,16 +20,19 @@ public class SteamApiService {
     private final String key = "11266E6017DE54EFC4B5133C24C680CD";
 
     private final WebClient.Builder webClientBuilder;
+    private final GameRepository gameRepository;
 
     @Autowired
-    public SteamApiService(WebClient.Builder webClientBuilder) {
+    public SteamApiService(WebClient.Builder webClientBuilder, GameRepository gameRepository) {
         this.webClientBuilder = webClientBuilder;
+        this.gameRepository = gameRepository;
     }
 
-    public User getSteamUser(String steamUrl) {
+    public User getSteamUserAndGames(String steamUrl) {
         String name = getVanityName(steamUrl);
         String id = getSteamIdFromName(name);
         String url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + id;
+        List<Game> games = getOwnedGames(id);
 
         String steamData = webClientBuilder.build()
                 .get()
@@ -35,7 +40,17 @@ public class SteamApiService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        return getUserFromData(steamData);
+
+        User user = getUserFromData(steamData);
+        for(Game game : games) {
+            Integer gameId = game.getAppId();
+            Optional<Game> savedGame = gameRepository.findById(gameId);
+            if(savedGame.isEmpty()){
+                gameRepository.save(game);
+            }
+            user.addGame(game);
+        }
+        return user;
     }
 
     public User getUserFromData(String steamData) {
@@ -86,7 +101,7 @@ public class SteamApiService {
         return parts[parts.length - 1].isEmpty() ? parts[parts.length - 2] : parts[parts.length - 1];
     }
 
-    public List<Game> getOwnedGames(Long id) {
+    public List<Game> getOwnedGames(String id) {
         String url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + key + "&steamid=" + id + "&include_appinfo=1&include_played_free_games=1";
         String steamData = webClientBuilder.build()
                 .get()

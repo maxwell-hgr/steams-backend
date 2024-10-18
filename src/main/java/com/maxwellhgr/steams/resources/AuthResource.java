@@ -39,7 +39,7 @@ public class AuthResource {
         Optional<User> user = this.userRepository.findByEmail(body.email());
 
         if(user.isEmpty()) {
-            User newUser = this.steamApiService.getSteamUser(body.steamUrl());
+            User newUser = this.steamApiService.getSteamUserAndGames(body.steamUrl());
             newUser.setPassword(passwordEncoder.encode(body.password()));
             newUser.setEmail(body.email());
             this.userRepository.save(newUser);
