@@ -46,7 +46,7 @@ public class LobbyService {
     public Lobby update(LobbyUpdateDTO data, Lobby lobby) {
         try {
             lobby.setName(data.name());
-            lobby.setGameCode(data.gameCode());
+            lobby.setAppId(data.appId());
             if(data.addUserId() != null){
                 Optional<User> user = userRepository.findById(data.addUserId());
                 user.ifPresent(lobby::addUser);

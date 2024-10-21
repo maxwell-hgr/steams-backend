@@ -1,5 +1,6 @@
 package com.maxwellhgr.steams.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,9 +28,10 @@ public class Lobby implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Integer gameCode;
+    private String appId;
     private String ownerId;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "tb_lobby_user",

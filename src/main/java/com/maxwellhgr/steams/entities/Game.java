@@ -27,11 +27,10 @@ public class Game implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Integer appId;
+    private String appId;
     private String name;
     private String banner;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "games")
     private Set<User> users = new HashSet<>();
 

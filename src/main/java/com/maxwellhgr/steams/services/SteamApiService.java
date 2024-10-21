@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maxwellhgr.steams.entities.Game;
 import com.maxwellhgr.steams.entities.User;
 import com.maxwellhgr.steams.repositories.GameRepository;
+import com.maxwellhgr.steams.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SteamApiService {
@@ -21,18 +23,21 @@ public class SteamApiService {
 
     private final WebClient.Builder webClientBuilder;
     private final GameRepository gameRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public SteamApiService(WebClient.Builder webClientBuilder, GameRepository gameRepository) {
+    public SteamApiService(WebClient.Builder webClientBuilder, GameRepository gameRepository, UserRepository userRepository) {
         this.webClientBuilder = webClientBuilder;
         this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
     }
 
     public User getSteamUserAndGames(String steamUrl) {
         String name = getVanityName(steamUrl);
         String id = getSteamIdFromName(name);
         String url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + key + "&steamids=" + id;
-        List<Game> games = getOwnedGames(id);
+        String gamesData = getOwnedGames(id);
+        List<Game> games = getGamesFromData(gamesData);
 
         String steamData = webClientBuilder.build()
                 .get()
@@ -42,10 +47,10 @@ public class SteamApiService {
                 .block();
 
         User user = getUserFromData(steamData);
-        for(Game game : games) {
-            Integer gameId = game.getAppId();
+        for (Game game : games) {
+            String gameId = game.getAppId();
             Optional<Game> savedGame = gameRepository.findById(gameId);
-            if(savedGame.isEmpty()){
+            if (savedGame.isEmpty()) {
                 gameRepository.save(game);
             }
             user.addGame(game);
@@ -72,7 +77,7 @@ public class SteamApiService {
         }
     }
 
-    public String getSteamIdFromName(String name){
+    public String getSteamIdFromName(String name) {
         String url = "https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=" + key + "&vanityurl=";
         String steamData = webClientBuilder.build()
                 .get()
@@ -101,15 +106,14 @@ public class SteamApiService {
         return parts[parts.length - 1].isEmpty() ? parts[parts.length - 2] : parts[parts.length - 1];
     }
 
-    public List<Game> getOwnedGames(String id) {
+    public String getOwnedGames(String id) {
         String url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + key + "&steamid=" + id + "&include_appinfo=1&include_played_free_games=1";
-        String steamData = webClientBuilder.build()
+        return webClientBuilder.build()
                 .get()
                 .uri(url)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        return getGamesFromData(steamData);
 
     }
 
@@ -124,7 +128,7 @@ public class SteamApiService {
 
             for (JsonNode gameNode : gamesNode) {
                 Game game = new Game();
-                game.setAppId(gameNode.path("appid").asInt());
+                game.setAppId(gameNode.path("appid").asText());
                 game.setName(gameNode.path("name").asText());
                 game.setBanner("https://cdn.cloudflare.steamstatic.com/steam/apps/" + game.getAppId() + "/header.jpg");
                 gamesList.add(game);
@@ -136,4 +140,49 @@ public class SteamApiService {
         return gamesList;
     }
 
+    public String getFriendsFromId(String id) {
+        String url = "https://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + key + "&steamid=" + id + "&relationship=friend";
+        return webClientBuilder.build()
+                .get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    public List<User> friendsWithGame(String steamData, String appId) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<User> friends = new ArrayList<>();
+        try {
+            JsonNode rootNode = mapper.readTree(steamData);
+            JsonNode friendslistNode = rootNode.path("friendslist");
+            JsonNode friendsNode = friendslistNode.path("friends");
+
+            for (JsonNode friend : friendsNode) {
+                String id = friend.path("steamid").asText();
+                Optional<User> userData = userWithGame(id, appId);
+                if (userData.isPresent()) {
+                    User user = userData.get();
+                    friends.add(user);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return friends;
+    }
+
+    private Optional<User> userWithGame(String id, String appId) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) {
+            Set<Game> games = user.get().getGames();
+            for(Game game : games) {
+                if(game.getAppId().equals(appId)) {
+                    return user;
+                }
+            }
+        }
+        return Optional.empty();
+    }
 }
