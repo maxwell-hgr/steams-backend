@@ -1,5 +1,7 @@
 package com.maxwellhgr.steams.resources;
 
+import com.maxwellhgr.steams.dto.ResponseDTO;
+import com.maxwellhgr.steams.dto.UserResponseDTO;
 import com.maxwellhgr.steams.dto.UserUpdateDTO;
 import com.maxwellhgr.steams.entities.User;
 import com.maxwellhgr.steams.services.UserService;
@@ -22,8 +24,8 @@ public class UserResource {
     }
 
     @GetMapping(value = "/profile")
-    public ResponseEntity<User> getProfile(HttpServletRequest request) {
-        User user = userService.getUserFromRequest(request);
+    public ResponseEntity<UserResponseDTO> getProfile(HttpServletRequest request) {
+        UserResponseDTO user = userService.getProfileFromRequest(request);
         return ResponseEntity.ok(user);
     }
 

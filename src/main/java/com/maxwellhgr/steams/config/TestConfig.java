@@ -27,35 +27,35 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-        User u1 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/maxwellhgr");
+        User u1 = this.steamApiService.getUser("https://steamcommunity.com/id/maxwellhgr");
         u1.setPassword(passwordEncoder.encode(("123456")));
         u1.setEmail("maxwell.hygor01@gmail.com");
         this.userRepository.save(u1);
-        User u2 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/COOOB");
+        User u2 = this.steamApiService.getUser("https://steamcommunity.com/id/COOOB");
         u2.setPassword(passwordEncoder.encode(("123456")));
         u2.setEmail("cob@gmail.com");
         this.userRepository.save(u2);
-        User u3 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/DitoZ");
+        User u3 = this.steamApiService.getUser("https://steamcommunity.com/id/DitoZ");
         u3.setPassword(passwordEncoder.encode(("123456")));
         u3.setEmail("dito@gmail.com");
         this.userRepository.save(u3);
-        User u4 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/1DIA6GANHA");
+        User u4 = this.steamApiService.getUser("https://steamcommunity.com/id/1DIA6GANHA");
         u4.setPassword(passwordEncoder.encode(("123456")));
         u4.setEmail("dudu@gmail.com");
         this.userRepository.save(u4);
-        User u5 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/LPMS");
+        User u5 = this.steamApiService.getUser("https://steamcommunity.com/id/LPMS");
         u5.setPassword(passwordEncoder.encode(("123456")));
         u5.setEmail("dizas@gmail.com");
         this.userRepository.save(u5);
-        User u6 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/Iurysantos");
+        User u6 = this.steamApiService.getUser("https://steamcommunity.com/id/Iurysantos");
         u6.setPassword(passwordEncoder.encode(("123456")));
         u6.setEmail("pabo@gmail.com");
         this.userRepository.save(u6);
-        User u7 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/mtss271");
+        User u7 = this.steamApiService.getUser("https://steamcommunity.com/id/mtss271");
         u7.setPassword(passwordEncoder.encode(("123456")));
         u7.setEmail("mts@gmail.com");
         this.userRepository.save(u7);
-        User u8 = this.steamApiService.getSteamUserAndGames("https://steamcommunity.com/id/lucassaitama");
+        User u8 = this.steamApiService.getUser("https://steamcommunity.com/id/lucassaitama");
         u8.setPassword(passwordEncoder.encode(("123456")));
         u8.setEmail("pabo@gmail.com");
         this.userRepository.save(u8);

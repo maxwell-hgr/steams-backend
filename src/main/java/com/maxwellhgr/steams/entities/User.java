@@ -37,7 +37,6 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "users")
     private final Set<Lobby> lobbies = new HashSet<>();
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_game",

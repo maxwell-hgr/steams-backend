@@ -33,6 +33,7 @@ public class Game implements Serializable {
     @OneToMany(mappedBy = "game")
     private List<Lobby> lobbies;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "games")
     private Set<User> users = new HashSet<>();
 

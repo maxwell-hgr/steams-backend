@@ -3,6 +3,7 @@ package com.maxwellhgr.steams.resources;
 import com.maxwellhgr.steams.dto.LoginRequestDTO;
 import com.maxwellhgr.steams.dto.RegisterRequestDTO;
 import com.maxwellhgr.steams.dto.ResponseDTO;
+import com.maxwellhgr.steams.entities.Game;
 import com.maxwellhgr.steams.entities.User;
 import com.maxwellhgr.steams.infra.security.TokenService;
 import com.maxwellhgr.steams.repositories.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,9 +44,10 @@ public class AuthResource {
         Optional<User> user = this.userRepository.findByEmail(body.email());
 
         if(user.isEmpty()) {
-            User newUser = this.steamApiService.getSteamUserAndGames(body.steamUrl());
+            User newUser = this.steamApiService.getUser(body.steamUrl());
             newUser.setPassword(passwordEncoder.encode(body.password()));
             newUser.setEmail(body.email());
+
             this.userRepository.save(newUser);
 
             String token = this.tokenService.generateToken(newUser);

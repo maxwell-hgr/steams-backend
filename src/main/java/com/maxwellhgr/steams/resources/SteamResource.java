@@ -38,16 +38,14 @@ public class SteamResource {
 
     @GetMapping(value = "/games/{id}")
     public ResponseEntity<List<Game>> getGamesById(@PathVariable String id){
-        String gamesData = steamApiService.getOwnedGames(id);
-        List<Game> games = steamApiService.getGamesFromData(gamesData);
+        List<Game> games = steamApiService.getOwnedGames(id);
         return ResponseEntity.ok().body(games);
     }
 
-    @GetMapping(value = "/friends/{appId}")
-    public ResponseEntity<List<User>> getFriendsWithGame(@PathVariable String appId, HttpServletRequest request){
+    @GetMapping(value = "/friends")
+    public ResponseEntity<List<User>> getFriends(HttpServletRequest request){
         User user = userService.getUserFromRequest(request);
-        String friendsData = steamApiService.getFriendsFromId(user.getId());
-        List<User> friendsWithGame = steamApiService.friendsWithGame(friendsData, appId);
-        return ResponseEntity.ok().body(friendsWithGame);
+        List<User> friends = steamApiService.getFriendsFromId(user.getId());
+        return ResponseEntity.ok().body(friends);
     }
 }
