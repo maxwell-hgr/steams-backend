@@ -1,5 +1,6 @@
 package com.maxwellhgr.steams.resources;
 
+import com.maxwellhgr.steams.dto.LobbyCreateDTO;
 import com.maxwellhgr.steams.dto.LobbyUpdateDTO;
 import com.maxwellhgr.steams.entities.Lobby;
 import com.maxwellhgr.steams.entities.User;
@@ -35,7 +36,7 @@ public class LobbyResource {
     @GetMapping(value = "/user")
     public ResponseEntity<Set<Lobby>> findAllByUser(HttpServletRequest request){
         User user = userService.getUserFromRequest(request);
-        Set<Lobby> lobbies = user.getLobbies();
+        Set<Lobby> lobbies = lobbyService.findAllByUser(user);
         return ResponseEntity.ok().body(lobbies);
     }
 
@@ -53,7 +54,7 @@ public class LobbyResource {
     }
 
     @PostMapping
-    public ResponseEntity<Lobby> create(@RequestBody Lobby lobby, HttpServletRequest request){
+    public ResponseEntity<Lobby> create(@RequestBody LobbyCreateDTO lobby, HttpServletRequest request){
         User user = userService.getUserFromRequest(request);
         Lobby result = lobbyService.create(lobby, user);
         return ResponseEntity.ok().body(result);

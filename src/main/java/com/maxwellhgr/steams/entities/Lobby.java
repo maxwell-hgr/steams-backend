@@ -28,10 +28,12 @@ public class Lobby implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String appId;
     private String ownerId;
 
-    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "app_id")
+    private Game game;
+
     @ManyToMany
     @JoinTable(
             name = "tb_lobby_user",

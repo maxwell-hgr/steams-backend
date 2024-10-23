@@ -32,10 +32,12 @@ public class User implements Serializable {
     private String password;
     private String photoUrl;
 
+    @Getter
     @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private final Set<Lobby> lobbies = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_game",
@@ -46,6 +48,10 @@ public class User implements Serializable {
 
     public void addGame(Game game) {
         games.add(game);
+    }
+
+    public void addLobby(Lobby lobby) {
+        lobbies.add(lobby);
     }
 
     @Override
